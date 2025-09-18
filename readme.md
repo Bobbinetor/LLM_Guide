@@ -4,6 +4,7 @@
 1. [Introduction](#introduction)
 2. [Prerequisites and Fundamental Concepts](#prerequisites-and-fundamental-concepts)
 3. [Ollama Deployment Process](#ollama-deployment-process)
+4. [Ollama Hands-on](#usefull-resources-and-hands-on)
 
 ---
 
@@ -551,8 +552,8 @@ curl http://localhost:11434/api/show -d '{
 ```
 
 
-## Usefull Resources for Hands-on 
+## Usefull Resources and Hands-on 
 
 To have your hands dirty and try for the first time Ollama you can use:
-- getting_started_ollama.ipynb
-- ollama_parameter_guide.ipynb
+- [Getting_Started](getting_started_ollama.ipynb)
+- [Parameters_experimental_evaluation](ollama_parameter_guide.ipynb)
