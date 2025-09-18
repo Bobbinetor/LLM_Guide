@@ -549,3 +549,10 @@ curl http://localhost:11434/api/show -d '{
   "name": "llama2"
 }'
 ```
+
+
+## Usefull Resources for Hands-on 
+
+To have your hands dirty and try for the first time Ollama you can use:
+- getting_started_ollama.ipynb
+- ollama_parameter_guide.ipynb
