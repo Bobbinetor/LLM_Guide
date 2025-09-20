@@ -547,7 +547,7 @@ Check model information and available parameters:
 
 ```bash
 curl http://localhost:11434/api/show -d '{
-  "name": "llama2"
+  "name": "gemma3:1b"
 }'
 ```
 
@@ -557,3 +557,82 @@ curl http://localhost:11434/api/show -d '{
 To have your hands dirty and try for the first time Ollama you can use:
 - [Getting_Started](getting_started_ollama.ipynb)
 - [Parameters_experimental_evaluation](ollama_parameter_guide.ipynb)
+
+
+### Hugging Face Download - Deploy and Finetune
+
+Hugging Face is the right choice when you want to go beyond simple model deployment and require a comprehensive platform for advanced machine learning research and development. It provides the essential tools for a full AI lifecycle, from accessing an extensive repository of models and datasets to fine-tuning, training, and evaluating bespoke solutions. Unlike tools designed for quick local inference, Hugging Face offers the flexibility and control necessary for creating truly customized and production-ready applications.
+
+## Prerequisites and Installation
+
+The foundational requirement for this process involves the installation of the `huggingface_hub` library, which provides the necessary tools for interfacing with the Hugging Face model repository. The installation process should be executed through the Python package installer, ensuring that the most current version is obtained to maintain compatibility with the latest repository features and security protocols.
+
+```bash
+pip install --upgrade huggingface_hub
+```
+
+This command ensures that any existing installation is updated to the latest version, thereby incorporating recent improvements in download efficiency, error handling, and repository access protocols.
+
+## Authentication Procedures
+
+The authentication process, while optional for publicly accessible models, represents a critical step for accessing restricted or gated models that require explicit user authorization. The authentication mechanism employs personal access tokens that establish a secure connection between your local environment and your Hugging Face account credentials. This process should be executed prior to attempting downloads of restricted content.
+
+```bash
+huggingface-cli login
+```
+
+Upon execution of this command, the system will prompt for the input of your personal access token. These tokens can be generated through your Hugging Face account management interface, specifically within the "Access Tokens" configuration panel. The token serves as a cryptographic credential that validates your authorization to access specific model repositories according to their individual access policies.
+
+## Model Download Implementation
+
+The core download operation utilizes the `huggingface-cli download` command, which provides sophisticated control over the retrieval process and local storage configuration. The following example demonstrates the download procedure for the `google/gemma-2b` model, though the methodology applies universally to any model hosted on the Hugging Face Hub.
+
+```bash
+huggingface-cli download google/gemma-2b --local-dir ./gemma-2b --local-dir-use-symlinks False
+```
+
+### Parameter Analysis
+
+The command structure incorporates several critical parameters that govern the download behavior and local storage implementation:
+
+The repository identifier `google/gemma-2b` specifies the exact model location within the Hugging Face Hub namespace. This identifier follows the conventional format of `organization/model-name` and must correspond precisely to the intended model repository.
+
+The `--local-dir ./gemma-2b` parameter establishes the destination directory for the downloaded model files. This specification creates a dedicated subdirectory within your current working directory, organizing the model components in an accessible and logically structured manner. The directory structure preserves the original repository organization, maintaining the integrity of file relationships and dependencies.
+
+The `--local-dir-use-symlinks False` parameter represents a crucial configuration decision that determines the nature of file storage on your local system. By disabling symbolic link usage, this setting ensures that complete file copies are created rather than reference links, thereby guaranteeing portable access to model components independent of network connectivity or original repository availability. This approach proves particularly valuable in scenarios requiring offline operation or when transferring models between different computing environments.
+
+## Downloaded Components Analysis
+
+The successful execution of the download process results in the acquisition of multiple distinct file types, each serving specific functions within the model ecosystem. Understanding the purpose and characteristics of these components proves essential for effective model deployment and troubleshooting.
+
+### Model Weight Files
+
+The most substantial components of any neural network model are the weight files, typically stored with extensions such as `.bin`, `.safetensors`, or `.pth`. These files contain the learned parameters that encode the model's accumulated knowledge from its training process. The weight files represent the mathematical transformations that the model applies to input data to generate outputs, embodying billions or trillions of floating-point numbers that define the model's behavioral patterns.
+
+Modern large language models often distribute weights across multiple files to accommodate storage limitations and facilitate parallel loading. For instance, a model might contain files named `pytorch_model-00001-of-00003.bin`, `pytorch_model-00002-of-00003.bin`, and so forth, each containing a portion of the complete parameter set. The `.safetensors` format has emerged as a preferred alternative due to its enhanced security properties and improved loading performance compared to traditional pickle-based formats.
+
+### Tokenizer Configuration and Vocabulary
+
+The tokenizer components constitute the interface between human-readable text and the numerical representations that neural networks require for processing. These files typically include `tokenizer_config.json`, `tokenizer.json`, `vocab.json`, and potentially `merges.txt` or similar vocabulary-related files.
+
+The `tokenizer_config.json` file contains high-level configuration parameters that specify the tokenizer's behavior, including special token definitions, normalization procedures, and truncation strategies. The `tokenizer.json` file, when present, provides a complete specification of the tokenization algorithm, including all rules for converting text into tokens and vice versa.
+
+Vocabulary files define the mapping between tokens and their corresponding numerical identifiers. For subword tokenization schemes such as Byte Pair Encoding (BPE), additional files like `merges.txt` specify the learned merge operations that combine character sequences into meaningful subword units. These components collectively ensure consistent text preprocessing that matches the model's training conditions.
+
+### Model Configuration Metadata
+
+The `config.json` file serves as the architectural blueprint for the model, containing essential parameters that define the model's structure and operational characteristics. This metadata includes specifications such as the number of attention heads, hidden layer dimensions, vocabulary size, maximum sequence length, and activation function types.
+
+This configuration file enables model loading frameworks to instantiate the correct architectural components before loading the associated weights. The parameters within this file must align precisely with the weight file structure, as any mismatch will result in loading failures or incorrect model behavior.
+
+### Additional Metadata and Documentation
+
+Repository downloads often include supplementary files that provide context and usage guidance. The `README.md` file typically contains model descriptions, performance benchmarks, usage examples, and licensing information. Files such as `generation_config.json` may specify default parameters for text generation tasks, including temperature settings, top-k sampling parameters, and maximum generation lengths.
+
+Some repositories include `pytorch_model.bin.index.json` or similar index files that map individual layers or parameter groups to their corresponding weight files. These index files facilitate efficient partial loading and memory management for large models that exceed available system memory.
+
+### Training and Evaluation Artifacts
+
+Depending on the model repository, additional files may provide insights into the training process and model performance. Files such as `training_args.json` document the hyperparameters used during model training, while evaluation metrics may be preserved in dedicated result files.
+
+Some repositories include `special_tokens_map.json`, which defines the specific tokens used for padding, beginning-of-sequence markers, end-of-sequence markers, and other special linguistic constructs that the model recognizes during processing.
